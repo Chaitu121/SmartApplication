@@ -13,10 +13,42 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	private String name;
-
+    private String name;
+	private String email;
+	private String encrypted_password;
 	private String status;
+
+	public String getEncrypted_password() {
+		return encrypted_password;
+	}
+
+	public void setEncrypted_password(String encrypted_password) {
+		this.encrypted_password = encrypted_password;
+	}
+
+	@Override
+	public String toString() {
+		return "Category [id=" + id + ", name=" + name + ", email=" + email + ", encrypted_password="
+				+ encrypted_password + ", status=" + status + "]";
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 
 	public String getName() {
 		return name;

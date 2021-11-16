@@ -1,7 +1,7 @@
 package com.conneqt.smartapp.controllers;
 
 import java.util.List;
-
+import org.json.simple.JSONObject;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.conneqt.smartapp.models.Category;
 import com.conneqt.smartapp.repository.CategoryRepository;
 import com.conneqt.smartapp.services.CategoryServices;
+import com.conneqt.smartapp.controlModels.Signin;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -24,26 +25,40 @@ import com.conneqt.smartapp.services.CategoryServices;
 public class CategoryController {
 
 	@Autowired
-	CategoryServices categoryService;
+	CategoryServices categoryServices;
 
-	@GetMapping("/category/list")
+	@GetMapping("/user/list")
 	public ResponseEntity<?> getUser() {
-		List<Category> uds = categoryService.findAll();
+		List<Category> uds = categoryServices.findAll();
 		Object obj = new Object();
 		System.out.println(uds);
 		// return new ResponseEntity<>(uds, HttpStatus.OK);
-		return ResponseEntity.ok(uds);
+		return ResponseEntity.ok().body(uds);
 	}
 
-	/*
-	 * @GetMapping("/category/list2") public String getUser22() { List<Category> uds
-	 * = categoryService.findAll(); System.out.println(uds.get(0).getName()); return
-	 * "sdfg"; }
-	 */
+	@PostMapping("/user/getData")
+	public ResponseEntity<?> getUser2(@Valid @RequestBody Signin category) {
+		Category categoryValue = categoryServices.findByEmail(category.getUsername());
+		if (categoryValue != null) {
+			if (categoryValue.getEncrypted_password().equals(category.getPassword())) {
+				JSONObject json = new JSONObject();
+				json.put("response", categoryValue);
+				json.put("Status", "Success");
+				return ResponseEntity.ok(json);
+			} else {
+				return ResponseEntity.badRequest().body("check your password");
+			}
+
+		} else {
+
+			return ResponseEntity.badRequest().body(category.getUsername() + "is not Registered with us");
+		}
+
+	}
 
 	@PostMapping("/category/create")
 	public ResponseEntity<?> registerLocation(@Valid @RequestBody Category category) {
-		categoryService.save(category);
+		categoryServices.save(category);
 		return ResponseEntity.ok("category registered successfully!");
 	}
 }

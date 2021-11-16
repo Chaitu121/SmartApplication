@@ -27,9 +27,20 @@ public class CategoryServicesImpl  implements CategoryServices{
 	}
 
 	@Override
+	public Category findByEmail(String id) {
+		System.out.println("fghj");
+		return categoryRepository.findByEmail(id);
+	}
+	@Override
 	public void save(@Valid Category addCategory) {
 		System.out.println(addCategory);
 		categoryRepository.save(addCategory);
 	}
 
+	@Override
+	public Category findByName(String addCategory) {
+		System.out.println(addCategory);
+		return categoryRepository.findByName(addCategory);
+	}
+	
 }
